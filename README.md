@@ -4,6 +4,8 @@ A LaTeX template for a PhD thesis: arranged by chapter, with a cover,
 front matter, table of contents, lists, chapters, bibliography and
 appendices, in the spirit of ACM's `acmart` class.
 
+Copiable Overleaf: https://www.overleaf.com/project/6ad0101a382b54ce52e53f10/share#ccfa6c2a057c83a2c49c2103cf0747598fc3f09006b95afc
+
 This file is only for attribution and licensing. User documentation is
 not kept here — it lives in the template itself: build `thesis.tex` and
 read its chapters (notably "Template Overview" and "Document Elements"),
