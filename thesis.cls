@@ -17,7 +17,10 @@
 %% adapted from acmart (Copyright 2016-2026 ACM, LPPL 1.3).
 %%
 %% Options:
-%%   print          two-sided (duplex) copy for printing and binding.
+%%   print          two-sided copy for printing and binding.
+%%   duplex         two-sided (double-sided) copy: mirrored (inner/outer)
+%%                  margins, mirrored running heads and page numbers on
+%%                  the outer edge, for printing and binding.
 %%   screen         one-sided copy for reading on screen (coloured links).
 %%   review         one-sided reading/review copy with line numbers.
 %%   biblatex       use biblatex (acmnumeric/acmauthoryear) instead of BibTeX
@@ -37,6 +40,7 @@
 
 \newif\if@thesis@review
 \newif\if@thesis@print
+\newif\if@thesis@duplex
 \newif\if@thesis@screen
 \newif\if@thesis@biblatex
 \newif\if@thesis@authoryear
@@ -48,6 +52,7 @@
 
 \DeclareOption{review}{\@thesis@reviewtrue}
 \DeclareOption{print}{\@thesis@printtrue}
+\DeclareOption{duplex}{\@thesis@duplextrue}
 \DeclareOption{screen}{\@thesis@screentrue}
 \DeclareOption{biblatex}{\@thesis@biblatextrue}
 \DeclareOption{authoryear}{\@thesis@authoryeartrue}
@@ -73,13 +78,20 @@
 %% single and double options override it.
 \if@thesis@double\else\if@thesis@single\else\@thesis@onehalftrue\fi\fi
 
-%% print is a two-sided (duplex) copy; screen and review are one-sided
-%% reading copies.
-\if@thesis@screen
-  \PassOptionsToClass{oneside}{extbook}
+%% print and duplex are two-sided copies; screen and review are
+%% one-sided reading copies. duplex always forces two-sided output so
+%% that odd/even pages mirror correctly.
+\if@thesis@duplex
+  \PassOptionsToClass{twoside}{extbook}
 \else
-  \if@thesis@review
+  \if@thesis@screen
     \PassOptionsToClass{oneside}{extbook}
+  \else
+    \if@thesis@review
+      \PassOptionsToClass{oneside}{extbook}
+    \else
+      \PassOptionsToClass{twoside}{extbook}
+    \fi
   \fi
 \fi
 
@@ -137,20 +149,28 @@
 \definecolor{thesisDarkBlue}{cmyk}{1,0.58,0,0.21}
 
 %%
-%% Page geometry (A4). print is two-sided with a 40mm binding (inner)
-%% margin; screen and review are one-sided with equal 25mm margins. The
-%% running head sits just above the text block (about 15mm from the top)
-%% and the page number 15mm from the bottom.
+%% Page geometry (A4). print and duplex are two-sided with a 40mm
+%% binding (inner) margin, so odd and even pages get different left/right
+%% padding (inner is always the binding edge). screen and review are
+%% one-sided with equal 25mm margins. The running head sits just above
+%% the text block (about 15mm from the top) and the page number 15mm from
+%% the bottom.
 %%
 \RequirePackage{geometry}
-\if@thesis@print
+\if@thesis@duplex
   \geometry{a4paper, heightrounded,
     inner=40mm, outer=25mm, top=24mm, bottom=24mm,
     headheight=17pt, headsep=3mm, footskip=25.5pt}
 \else
-  \geometry{a4paper, heightrounded,
-    left=25mm, right=25mm, top=24mm, bottom=24mm,
-    headheight=17pt, headsep=3mm, footskip=25.5pt}
+  \if@thesis@print
+    \geometry{a4paper, heightrounded,
+      inner=40mm, outer=25mm, top=24mm, bottom=24mm,
+      headheight=17pt, headsep=3mm, footskip=25.5pt}
+  \else
+    \geometry{a4paper, heightrounded,
+      left=25mm, right=25mm, top=24mm, bottom=24mm,
+      headheight=17pt, headsep=3mm, footskip=25.5pt}
+  \fi
 \fi
 
 \setlength\parindent{1.5em}
@@ -281,7 +301,13 @@
   \fi}
 
 %%
-%% Running heads (chapter/section) and feet (page number).
+%% Running heads (chapter/section) and feet (page number). In two-sided
+%% (duplex) output the running head is placed on the outer edge of every
+%% page (even: left, odd: right) so it always aligns to the same side of
+%% the sheet when the pages are flipped. In duplex mode the page number
+%% also sits on the outer edge; otherwise it is centred. In review mode
+%% the line-number ruler always sits in the left margin (both odd and even
+%% pages) with the running head on the right.
 %%
 \RequirePackage{fancyhdr}
 \fancyhf{}
@@ -289,8 +315,15 @@
   \thesisHeadFont
   \ifodd\value{page}\nouppercase{\rightmark}\else\nouppercase{\leftmark}\fi}
 \if@twoside
-  \fancyhead[LE]{\thesisHeadFont\nouppercase{\leftmark}}
-  \fancyhead[RO]{\thesisHeadFont\nouppercase{\rightmark}}
+  \if@thesis@review
+    \fancyhead[LE]{\thesis@linecountL}
+    \fancyhead[LO]{\thesis@linecountL}
+    \fancyhead[RE]{\thesisHeadFont\nouppercase{\leftmark}}
+    \fancyhead[RO]{\thesisHeadFont\nouppercase{\rightmark}}
+  \else
+    \fancyhead[LE]{\thesisHeadFont\nouppercase{\leftmark}}
+    \fancyhead[RO]{\thesisHeadFont\nouppercase{\rightmark}}
+  \fi
 \else
   \if@thesis@review
     \fancyhead[L]{\thesis@linecountL}
@@ -300,7 +333,11 @@
     \fancyhead[R]{\ifodd\value{page}\thesisHeadFont\nouppercase{\rightmark}\fi}
   \fi
 \fi
-\fancyfoot[C]{\thesisFootFont\thepage}
+\if@thesis@duplex
+  \fancyfoot[LE,RO]{\thesisFootFont\thepage}
+\else
+  \fancyfoot[C]{\thesisFootFont\thepage}
+\fi
 \renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\footrulewidth}{0pt}
 \pagestyle{fancy}
@@ -308,12 +345,18 @@
 %% A plain page style for covers, chapter openings and front matter:
 %% no running head, page number in the footer. Defined directly (rather
 %% than with \fancypagestyle) so it does not disturb the fancy fields.
+%% In duplex mode the page number moves to the outer edge.
 \def\ps@plain{%
   \let\@mkboth\@gobbletwo
   \def\@oddhead{\thesis@linecountL\hfil}%
   \def\@evenhead{\thesis@linecountL\hfil}%
-  \def\@oddfoot{\hfil\thesisFootFont\thepage\hfil}%
-  \def\@evenfoot{\hfil\thesisFootFont\thepage\hfil}%
+  \if@thesis@duplex
+    \def\@oddfoot{\hfil\thesisFootFont\thepage}%
+    \def\@evenfoot{\thesisFootFont\thepage\hfil}%
+  \else
+    \def\@oddfoot{\hfil\thesisFootFont\thepage\hfil}%
+    \def\@evenfoot{\hfil\thesisFootFont\thepage\hfil}%
+  \fi
 }
 
 %% Front matter (cover, contents, lists, ) uses plain pages
@@ -377,7 +420,7 @@
 %% Use  \begin{abstract} ... \keywords{...} \end{abstract}
 %%
 \newenvironment{abstract}{%
-  \cleardoublepage
+  \clearpage
   \thispagestyle{plain}%
   \addcontentsline{toc}{chapter}{\abstractname}%
   \noindent\rule{\textwidth}{0.2pt}
