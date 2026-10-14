@@ -1,0 +1,116 @@
+%%
+%% cover.sty -- the cover (title) page for the thesis class.
+%%
+%% Copyright (C) 2026 Dung Nguyen Manh
+%%
+%% This work may be distributed and/or modified under the conditions of
+%% the LaTeX Project Public License, either version 1.3c of this license
+%% or (at your option) any later version. The latest version of this
+%% license is in <https://www.latex-project.org/lppl.txt>.
+%%
+%% This work has the LPPL maintenance status `maintained'.
+%% The Current Maintainer of this work is Dung Nguyen Manh.
+%%
+%% It is deliberately separate from thesis.cls so that the cover can be
+%% customised freely without touching the thesis class. Load it in the
+%% preamble and keep the metadata in a file that you \input:
+%%
+%%   \usepackage{cover}
+%%   \input{frontmatter/cover}
+%%   ...
+%%   \maketitle
+%%
+%% Redefine \maketitle to change the layout of the cover.
+%%
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{cover}[2026/10/14 v0.1 Cover page for thesis]
+
+%%
+%% Metadata fields and ACM-style setters.
+%%
+\def\@thesissubtitle{}
+\def\@thesisauthornote{}
+\def\@thesisemail{}
+\def\@thesisorcid{}
+\def\@thesisaffiliation{}
+\def\@thesisdegree{}
+\def\@thesissupervisor{}
+\def\@thesiscosupervisor{}
+\def\@thesissubmissiondate{}
+
+\newcommand\subtitle[1]{\gdef\@thesissubtitle{#1}}
+\newcommand\authornote[1]{\gdef\@thesisauthornote{#1}}
+\newcommand\email[1]{\gdef\@thesisemail{#1}}
+\newcommand\orcid[1]{\gdef\@thesisorcid{#1}}
+\newcommand\affiliation[1]{\gdef\@thesisaffiliation{#1}}
+\newcommand\degree[1]{\gdef\@thesisdegree{#1}}
+\newcommand\supervisor[1]{\gdef\@thesissupervisor{#1}}
+\newcommand\cosupervisor[1]{\gdef\@thesiscosupervisor{#1}}
+\newcommand\submissiondate[1]{\gdef\@thesissubmissiondate{#1}}
+
+%% Read the values back (used by the cover and by front matter).
+\newcommand\thetitle{\@title}
+\newcommand\thesubtitle{\@thesissubtitle}
+\newcommand\theauthor{\@author}
+\newcommand\theemail{\@thesisemail}
+\newcommand\theorcid{\@thesisorcid}
+\newcommand\theaffiliation{\@thesisaffiliation}
+\newcommand\thedegree{\@thesisdegree}
+\newcommand\thesupervisor{\@thesissupervisor}
+\newcommand\thecosupervisor{\@thesiscosupervisor}
+\newcommand\thesubmissiondate{\@thesissubmissiondate}
+
+%% PDF document information.
+\AtBeginDocument{%
+  \hypersetup{pdftitle={\@title}, pdfauthor={\@author}}%
+}
+
+%%
+%% The cover page. The cover uses symmetric margins, independent of the
+%% binding margin, and is not affected by the body layout.
+%%
+\renewcommand\maketitle{%
+  \newgeometry{left=25mm, right=25mm, top=24mm, bottom=24mm,
+    headheight=17pt, headsep=3mm, footskip=25.5pt}%
+  \begin{titlepage}%
+  \thispagestyle{empty}%
+  \centering
+  \null\vfill
+  %% Title and optional subtitle
+  {\LARGE\sffamily\bfseries\@title\par}
+  \ifx\@thesissubtitle\@empty\else
+    \vspace{0.6cm}{\large\itshape\@thesissubtitle\par}\fi
+
+  %% Author
+  \vspace{2.5cm}
+  {\Large\@author\par}
+  % \ifx\@thesisauthornote\@empty\else
+  %   \vspace{0.6cm}{\small\@thesisauthornote\par}\fi
+  % \ifx\@thesisemail\@empty\else
+  %   \vspace{0.4cm}{\small\@thesisemail\par}\fi
+  % \ifx\@thesisorcid\@empty\else
+  %   \vspace{0.2cm}{\small ORCID: \@thesisorcid\par}\fi
+  \vfill
+  {\large Submitted in partial fulfilment of the requirements for the degree of\par}
+  \ifx\@thesisdegree\@empty\else
+    \vspace{0.4cm}{\Large\bfseries\@thesisdegree\par}\fi
+  \vfill
+  \ifx\@thesisaffiliation\@empty\else
+    \vspace{1.2cm}{\large\@thesisaffiliation\par}\fi
+  % \ifx\@thesissupervisor\@empty\else
+  %   {\large Supervisor: \@thesissupervisor\par}\fi
+  % \ifx\@thesiscosupervisor\@empty\else
+  %   {\large Co-supervisor: \@thesiscosupervisor\par}\fi
+  \vspace{0.8cm}
+  {\large\@thesissubmissiondate\par}
+  \ifx\@thesisorcid\@empty\else
+    {\large ORCID: \@thesisorcid\par}\fi
+  \vfill\null
+  \end{titlepage}%
+  \restoregeometry
+  \setcounter{page}{2}%
+}
+
+%% (Front matter such as the abstract lives in thesis.cls.)
+
+\endinput

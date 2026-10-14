@@ -1,0 +1,67 @@
+\documentclass[screen,review]{thesis}
+
+%% The cover page lives in cover.sty, loaded here, with its metadata
+%% in frontmatter/cover.tex. Redefine \maketitle to change the layout.
+\usepackage{cover}
+\title{A Study of Something Interesting}
+\subtitle{Towards a Better Understanding of the Problem}
+
+\author{Jane Q. Doe}
+\affiliation{Department of Computer Science\\University of Somewhere\\Somewhere, Country}
+% \email{jane.doe@example.edu}
+\orcid{0000-0000-0000-0000}
+% \authornote{Corresponding author.}
+
+\degree{Doctor of Philosophy}
+\supervisor{Prof. Ada Lovelace}
+\cosupervisor{Dr. Alan Turing}
+\submissiondate{October 2026}
+
+%% ---- Typography (optional) ------------------------------------------
+%% The text face is a class option:
+%%   \documentclass[print,font=times]{thesis}   (also font=palatino)
+%% and the base size is 14pt by default (also 10/11/12/17/20pt).
+%% Adjust the running head, heading sizes, line spacing or paragraph
+%% spacing with a single setup command. Headings are serif by default;
+%% add \sffamily to a heading value for sans-serif headings.
+% \thesissetup{
+%   head       = {\small},
+%   chapter    = {\bfseries\LARGE},
+%   section    = {\bfseries\Large},
+%   subsection = {\bfseries\large},
+%   linespread = 1.15,
+%   parskip    = 6pt,
+% }
+%% ---------------------------------------------------------------------
+
+\begin{document}
+
+\frontmatter
+\maketitle
+
+\input{frontmatter/dedication}
+\input{frontmatter/declaration}
+\input{frontmatter/preface}
+\input{frontmatter/acknowledgements}
+\input{frontmatter/abstract}
+
+\tableofcontents
+\listoffigures
+\listoftables
+
+\mainmatter
+\input{chapters/introduction}
+\input{chapters/template-overview}
+\input{chapters/document-elements}
+\input{chapters/tables-figures}
+\input{chapters/mathematics}
+\input{chapters/citations}
+\input{chapters/conclusion}
+
+\backmatter
+\bibliography{sample-base,references}
+
+\appendix
+\input{backmatter/appendix}
+
+\end{document}

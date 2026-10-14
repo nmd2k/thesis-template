@@ -1,0 +1,122 @@
+\chapter{Template Overview}
+\label{ch:overview}
+
+As noted in the introduction, this document class can be used to prepare
+many different renderings of the same thesis --- a copy for review, a
+clean copy for printing and binding, and a copy for reading on screen ---
+all by selecting the appropriate {\itshape template style} and {\itshape
+  template parameters}.
+
+This document explains the major features of the document class. For
+further information on the original ACM class, the {\itshape \LaTeX\
+User's Guide} is available from
+\url{https://www.acm.org/publications/proceedings-template}.
+
+\section{Template Styles}
+\label{sec:styles}
+
+The primary parameter given to the document class is the {\itshape
+  template style}, which corresponds to the intended use of the output.
+This parameter is enclosed in square brackets and is a part of the
+\verb|documentclass| command:
+\begin{verbatim}
+  \documentclass[STYLE]{thesis}
+\end{verbatim}
+
+The thesis template defines three styles:
+\begin{itemize}
+\item {\texttt{print}}: a two-sided (duplex) copy with binding margins,
+  suitable for printing and binding. This is the default.
+\item {\texttt{screen}}: a one-sided copy for reading on screen, with
+  coloured hyperlinks.
+\item {\texttt{review}}: a one-sided reading copy with line numbers.
+\end{itemize}
+
+\section{Template Parameters}
+\label{sec:parameters}
+
+In addition to specifying the {\itshape template style}, there are a
+number of {\itshape template parameters} which modify some part of the
+applied template style. The base font size is 14\,pt by default, and
+10, 11, 12, 17 and 20\,pt are also accepted. Frequently-used parameters
+include:
+\begin{itemize}
+\item {\texttt{onehalf}}, {\texttt{double}}: line spacing.
+\item {\texttt{font=times}}: a Times-like text face ({\texttt{font=libertine}}
+  is the default).
+\item {\texttt{authoryear}}: author--year citations.
+\item {\texttt{biblatex}}: use \BibLaTeX\ with the \texttt{acmnumeric}
+  or \texttt{acmauthoryear} styles instead of \BibTeX.
+\end{itemize}
+
+
+Testing the listing
+\begin{itemize}
+  \item Something
+  \item Another one
+\end{itemize}
+
+This document uses the following string as the first command in the
+source file:
+\begin{verbatim}
+\documentclass[print]{thesis}
+\end{verbatim}
+
+\section{Files and Building}
+\label{sec:files}
+
+The template is built with the usual \LaTeX\ tools. With \texttt{latexmk}:
+\begin{verbatim}
+  latexmk -pdf thesis.tex
+\end{verbatim}
+or, manually, \verb|pdflatex|, then \verb|bibtex|, then \verb|pdflatex|
+twice more. A full \TeX\ Live (or MiKTeX) installation is required; the
+class uses the standard packages \texttt{extsizes}, \texttt{libertine},
+\texttt{newtxmath}, \texttt{geometry}, \texttt{titlesec},
+\texttt{fancyhdr}, \texttt{setspace}, \texttt{natbib}, \texttt{hyperref},
+\texttt{microtype}, \texttt{booktabs}, \texttt{amsmath} and
+\texttt{amsthm}.
+
+The entry point is \texttt{thesis.tex}, and the files are laid out as
+follows:
+\begin{verbatim}
+  thesis.cls   the thesis class (structure, typography)
+  cover.sty    the cover page
+  thesis.tex      entry point
+  frontmatter/    cover metadata and the preliminary parts
+  chapters/       the main chapters
+  backmatter/     the appendices
+  references.bib  your bibliography
+\end{verbatim}
+
+\section{Document Structure}
+\label{sec:structure}
+
+The document is divided in the usual way:
+\begin{itemize}
+\item \verb|\frontmatter| --- the cover, dedication, declaration, preface,
+  acknowledgements and abstract, numbered in roman numerals;
+\item \verb|\mainmatter| --- the chapters, numbered in arabic;
+\item \verb|\backmatter| --- the bibliography and the appendices.
+\end{itemize}
+The preliminary parts use the \verb|frontchapter| environment, which
+takes the title you give it and starts an unnumbered, table-of-contents
+listed page:
+\begin{verbatim}
+  \begin{frontchapter}[Declaration]
+    ... the declaration text ...
+  \end{frontchapter}
+\end{verbatim}
+(The title may also be given in braces, \verb|\begin{frontchapter}{Declaration}|.)
+The abstract is a special page with its own \verb|abstract| environment.
+Each preliminary part is kept in its own file under \texttt{frontmatter/}
+and simply included from \texttt{thesis.tex}.
+
+\section{Modifications}
+\label{sec:modifications}
+
+The class is meant to be used as-is. Adjusting margins, typeface sizes,
+line spacing, paragraph and list definitions, and the use of the
+\verb|\vspace| command to manually adjust the vertical spacing between
+elements of your work should be done with care, as these settings often
+need to satisfy the requirements of your institution.

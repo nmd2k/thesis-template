@@ -1,0 +1,108 @@
+\chapter{Document Elements}
+\label{ch:elements}
+
+This chapter describes the individual elements of which a thesis is
+composed, from the typeface to the sectioning commands.
+
+\section{Typefaces}
+\label{sec:typefaces}
+
+The document class requires the use of the ``Libertine'' typeface
+family. Your \TeX\ installation should include this set of packages.
+Please do not substitute other typefaces. The ``\verb|lmodern|'' and
+``\verb|ltimes|'' packages should not be used, as they will override the
+built-in typeface families.
+
+\section{Title Information}
+\label{sec:title}
+
+The title of your work should use capital letters appropriately ---
+\url{https://capitalizemytitle.com/} has useful rules for
+capitalization. Set the title and subtitle with the standard
+\verb|\title| command and the \verb|\subtitle| command:
+\begin{verbatim}
+  \title{The Name of the Title Is Hope}
+  \subtitle{A Short Subtitle}
+\end{verbatim}
+Do not insert line breaks in your title.
+
+\section{Metadata}
+\label{sec:metadata}
+
+The cover page is kept apart from the thesis class. It is provided by the
+\texttt{cover} package, loaded and fed from the preamble:
+\begin{verbatim}
+  \usepackage{cover}
+  \input{frontmatter/cover}
+\end{verbatim}
+The metadata file uses familiar ACM-style commands:
+\begin{verbatim}
+  \author{Ben Trovato}
+  \affiliation{Department of Computer Science\\
+               University of Somewhere}
+  \email{trovato@corporation.com}
+  \orcid{1234-5678-9012}
+  \authornote{Corresponding author.}
+
+  \degree{Doctor of Philosophy}
+  \supervisor{Prof.\ Ada Lovelace}
+  \cosupervisor{Dr.\ Alan Turing}
+  \submissiondate{October 2026}
+\end{verbatim}
+Each value can be printed in the document with the corresponding
+accessor, for example \verb|\theauthor|, \verb|\theaffiliation| and
+\verb|\thesubmissiondate|.
+
+The cover itself is produced by \verb|\maketitle|. To customise its
+layout, redefine \verb|\maketitle| (or edit \texttt{cover.sty}) using
+the accessors, for example:
+\begin{verbatim}
+  \renewcommand{\maketitle}{%
+    \begin{titlepage}\centering
+      {\Huge\bfseries\thetitle\par}\vspace{2cm}
+      {\LARGE\theauthor\par}
+    \end{titlepage}}
+\end{verbatim}
+
+\section{Sectioning Commands}
+\label{sec:sectioning}
+
+\sloppy
+Your work should use standard \LaTeX\ sectioning commands:
+\verb|\chapter|, \verb|\section|, \verb|\subsection|,
+\verb|\subsubsection|, \verb|\paragraph|, and \verb|\subparagraph|. The
+sectioning levels up to \verb|\subsubsection| should be numbered; do not
+remove the numbering from the commands.
+\fussy
+
+Simulating a sectioning command by setting the first word or words of a
+paragraph in boldface or italicized text is {\bfseries not allowed.}
+
+Below are examples of sectioning commands.
+
+\subsection{Subsection}
+\label{sec:subsection}
+
+This is a subsection.
+
+\subsubsection{Subsubsection}
+\label{sec:subsubsection}
+
+This is a subsubsection.
+
+\paragraph{Paragraph}
+
+This is a paragraph.
+
+\subparagraph{Subparagraph}
+
+This is a subparagraph.
+
+\section{Multi-language Documents}
+\label{sec:languages}
+
+Documents may be written in languages other than English, or include
+titles, subtitles and abstracts in different languages. As a rule, a
+document written in a language other than English should also include an
+English title and abstract. The metadata commands accept arbitrary text,
+so translated titles and abstracts can be set alongside the main ones.
